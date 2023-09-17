@@ -1,0 +1,30 @@
+  schedule:
+    - cron: '0 9,1 * * *'  # 每6h一次
+  workflow_dispatch:  # 触发手动事件
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11  # 替换为你的 Python 版本
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run merge script
+        run: python helper.py  # 替换为你的 merge.py 脚本名称
+
+      - name: Commit Changes
+        run: |
+          git config core.ignorecase false
+          git config --local user.email "11@gmail.com"
+          git config --local user.name "clash"
+          git add .
+          git commit -m "Updated at $(date '+%Y-%m-%d %H:%M:%S')"
+          git push
